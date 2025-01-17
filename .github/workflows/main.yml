@@ -1,0 +1,16 @@
+name: Run Custom Action
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run custom action
+        uses: ./.github/actions/my-action
+        with:
+          name: 'GitHub'
