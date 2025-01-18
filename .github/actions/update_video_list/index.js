@@ -43,19 +43,6 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 		// ✅ User-Agent 설정 (봇 차단 우회)
 		await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
 
-		// // ✅ navigator 객체 우회
-		// await page.evaluateOnNewDocument(() => {
-		// 	Object.defineProperty(navigator, 'webdriver', {
-		// 		get: () => false,
-		// 	});
-		// 	window.navigator = {
-		// 		userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-		// 		platform: 'Win32',
-		// 		language: 'ko-KR',
-		// 		languages: ['ko-KR', 'ko'],
-		// 	};
-		// });
-
 		// 1️⃣ 페이지 열기
 		await page.goto(postUrl, { waitUntil: 'networkidle2' });
 
@@ -162,10 +149,16 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 				const videoUrl = await fetchVideoUrl(item.postUrl, retryCount);
 				await delay();
 				if (videoUrl) {
+					encodedTitle = Buffer.from(item.title, 'utf-8').toString('base64');
+					encodedUrl = Buffer.from(videoUrl, 'utf-8').toString('base64');  
 					videoItems.push({
-						title: item.title,
-						videoUrl: videoUrl
+						title: encodedTitle,
+						videoUrl: encodedUrl
 					});
+					// videoItems.push({
+					// 	title: item.title,
+					// 	videoUrl: videoUrl
+					// });
 					console.log(item.title, videoUrl);
 				} 
 				break;
@@ -186,8 +179,7 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 
 };
 
-
-// INE 갤러리 크롤링하여 비디오 링크 수집
+// Crawling pages
 // const maxPageNumber = await fetchMaxPageNumber();
 // await fetchPostLinksSeq(maxPageNumber, 5);
 await fetchPostLinksSeq(1, 5);
