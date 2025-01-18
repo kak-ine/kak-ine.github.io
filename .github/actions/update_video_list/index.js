@@ -196,5 +196,4 @@ console.log('수집된 videoItems:', videoItems);
 
 
 // ../../../data/videos.json
-const videoJsonPath = path.join(__dirname, '..', '..', '..', 'data', 'videos.json')
-fs.writeFileSync(videoJsonPath, JSON.stringify(videoItems, null, 2), 'utf-8');
+fs.writeFileSync('../../../data/videos.json', JSON.stringify(videoItems, null, 2), 'utf-8');
