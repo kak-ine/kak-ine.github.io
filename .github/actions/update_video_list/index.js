@@ -9,12 +9,6 @@ import fs from 'fs';
 const galleryBaseUrl = 'https://gall.dcinside.com/mini/board/lists?id=ineviolet';
 const maxRetries = 5;
 const keyword = "아이네";
-let currentVideoIndex = -1;
-let currentIndex = -1;
-let isPlaying = false;
-let isFirstPlayTriggered = false;  // 🔥 첫 재생 여부
-let isHidden = false;  // 🔥 숨김 상태 여부 저장
-let shuffledItems = []
 
 const headers = {
 	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -79,7 +73,6 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 	return null
 }
 
-
 // 📌 동영상 링크 추출
 const fetchVideoUrl = async (postUrl, retryCount = 0) => {
 	const iframeSelector = 'iframe[id^="movieIcon"]';  // iframe의 CSS 셀렉터
@@ -87,7 +80,6 @@ const fetchVideoUrl = async (postUrl, retryCount = 0) => {
 	const videoUrl = await extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector);
 	return videoUrl;
 };
-
 
 // 📌 최대 페이지 수 자동 추출
 const fetchMaxPageNumber = async (retryCount = 0) => {
@@ -176,13 +168,14 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 			retry++;
 		}
 	}
-
 };
 
+// Test code
+// await fetchPostLinksSeq(1, 5);
+
 // Crawling pages
-// const maxPageNumber = await fetchMaxPageNumber();
-// await fetchPostLinksSeq(maxPageNumber, 5);
-await fetchPostLinksSeq(1, 5);
+const maxPageNumber = await fetchMaxPageNumber();
+await fetchPostLinksSeq(maxPageNumber, 5);
 console.log('수집된 videoItems:', videoItems);
 
 // ../../../data/videos.json
