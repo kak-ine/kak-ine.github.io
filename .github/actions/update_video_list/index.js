@@ -190,3 +190,10 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 // await fetchPostLinksSeq(maxPageNumber, 5);
 await fetchPostLinksSeq(1, 5);
 console.log('수집된 videoItems:', videoItems);
+
+const path = require('path');
+const fs = require('fs');
+
+// ../../../data/videos.json
+const videoJsonPath = path.join(__dirname, '..', '..', '..', 'data', 'videos.json')
+fs.writeFileSync(videoJsonPath, JSON.stringify(videoItems, null, 2), 'utf-8');
