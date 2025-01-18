@@ -193,7 +193,5 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 await fetchPostLinksSeq(1, 5);
 console.log('수집된 videoItems:', videoItems);
 
-
-
 // ../../../data/videos.json
 fs.writeFileSync('../../../data/videos.json', JSON.stringify(videoItems, null, 2), 'utf-8');
