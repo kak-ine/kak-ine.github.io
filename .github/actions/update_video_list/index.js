@@ -149,8 +149,8 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 				const videoUrl = await fetchVideoUrl(item.postUrl, retryCount);
 				await delay();
 				if (videoUrl) {
-					encodedTitle = Buffer.from(item.title, 'utf-8').toString('base64');
-					encodedUrl = Buffer.from(videoUrl, 'utf-8').toString('base64');  
+					const encodedTitle = Buffer.from(item.title, 'utf-8').toString('base64');
+					const encodedUrl = Buffer.from(videoUrl, 'utf-8').toString('base64');  
 					videoItems.push({
 						title: encodedTitle,
 						videoUrl: encodedUrl
