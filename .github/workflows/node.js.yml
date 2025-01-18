@@ -18,13 +18,8 @@ jobs:
           node-version: '16'
           cache: 'npm'
 
-      - name: Generate env variables for DB update
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        run: echo "DBURI=$MONGODB_URI" >> .env
-
       - name: Install npm dependencies
         run: npm ci
 
       - name: Update daily data
-        run: npm run newday
+        run: npm run hello
