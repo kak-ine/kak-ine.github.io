@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "hello": node data/api/hello.js
+  }
+}
