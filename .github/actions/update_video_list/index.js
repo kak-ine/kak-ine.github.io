@@ -24,7 +24,7 @@ function replaceDomain(videoUrl) {
 	return videoUrl.replace('dcm6', 'dcm1');
 }
 
-async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector) {
+async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector, retryCount = 0) {
 	const browser = await puppeteer.launch({
 		headless: true,  // headless 모드로 실행
 		args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -65,6 +65,11 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 
 	} catch (error) {
 		console.error('❌ 오류 발생:', error.message);
+		if (retryCount > 0) {
+			retryCount--;
+			await delay();
+			return extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector, retryCount)
+		 }
 	} finally {
 		await browser.close();
 	}
@@ -75,7 +80,7 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 const fetchVideoUrl = async (postUrl, retryCount = 0) => {
 	const iframeSelector = 'iframe[id^="movieIcon"]';  // iframe의 CSS 셀렉터
 	const videoSelector = 'video#dc_mv';              // iframe 내부 video 셀렉터
-	const videoUrl = await extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector);
+	const videoUrl = await extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector, 5);
 	return videoUrl;
 };
 
