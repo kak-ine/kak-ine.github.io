@@ -1,9 +1,0 @@
-name: 'My Custom Action'
-description: 'A simple custom GitHub Action'
-inputs:
-  name:
-    description: 'Kak-ine'
-    required: true
-runs:
-  using: 'node16'
-  main: 'index.js'
