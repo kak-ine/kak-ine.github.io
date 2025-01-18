@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
+          cache-dependency-path: ./client/package-lock.json
 
       - name: Install npm dependencies
         run: npm ci
