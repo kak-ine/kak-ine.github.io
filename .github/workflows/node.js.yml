@@ -23,8 +23,10 @@ jobs:
         run: |
           pushd .github/actions/update_video_list
           npm ci
+          npm install puppeteer
+          npm install jsdom
 
       - name: Update daily data
         run: |
           pushd .github/actions/update_video_list
-          npm run hello
+          npm run start
