@@ -14,6 +14,10 @@ let isFirstPlayTriggered = false;  // 🔥 첫 재생 여부
 let isHidden = false;  // 🔥 숨김 상태 여부 저장
 let shuffledItems = []
 
+const headers = {
+	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+
 // 🔥 새로 추가: { title: ..., videoUrl: ... } 형태의 배열
 const videoItems = [];
 
@@ -37,18 +41,18 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 		// ✅ User-Agent 설정 (봇 차단 우회)
 		await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
 
-		// ✅ navigator 객체 우회
-		await page.evaluateOnNewDocument(() => {
-			Object.defineProperty(navigator, 'webdriver', {
-				get: () => false,
-			});
-			window.navigator = {
-				userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-				platform: 'Win32',
-				language: 'ko-KR',
-				languages: ['ko-KR', 'ko'],
-			};
-		});
+		// // ✅ navigator 객체 우회
+		// await page.evaluateOnNewDocument(() => {
+		// 	Object.defineProperty(navigator, 'webdriver', {
+		// 		get: () => false,
+		// 	});
+		// 	window.navigator = {
+		// 		userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+		// 		platform: 'Win32',
+		// 		language: 'ko-KR',
+		// 		languages: ['ko-KR', 'ko'],
+		// 	};
+		// });
 
 		// 1️⃣ 페이지 열기
 		await page.goto(postUrl, { waitUntil: 'networkidle2' });
@@ -125,7 +129,7 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 
 		try {
 			const response = await fetch(PageUrl, {
-				headers: { 'User-Agent': navigator.userAgent }
+				headers: headers
 			});
 
 			if (!response.ok) throw new Error(`응답 실패 (상태 코드: ${response.status})`);
