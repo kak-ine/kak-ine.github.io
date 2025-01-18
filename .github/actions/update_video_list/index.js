@@ -3,6 +3,8 @@ console.log("Hello world");
 import fetch from 'node-fetch';
 import { JSDOM } from 'jsdom';
 import puppeteer from 'puppeteer';
+import path from 'path';
+import fs from 'fs';
 
 const galleryBaseUrl = 'https://gall.dcinside.com/mini/board/lists?id=ineviolet';
 const maxRetries = 5;
@@ -191,8 +193,7 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 await fetchPostLinksSeq(1, 5);
 console.log('수집된 videoItems:', videoItems);
 
-const path = require('path');
-const fs = require('fs');
+
 
 // ../../../data/videos.json
 const videoJsonPath = path.join(__dirname, '..', '..', '..', 'data', 'videos.json')
