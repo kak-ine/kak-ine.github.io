@@ -9,7 +9,6 @@ import fs from 'fs';
 const galleryBaseUrl = 'https://gall.dcinside.com/mini/board/lists?id=ineviolet';
 const maxRetries = 5;
 const keyword = "아이네";
-
 const headers = {
 	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
@@ -69,7 +68,6 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 	} finally {
 		await browser.close();
 	}
-
 	return null
 }
 
@@ -147,16 +145,10 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 						title: encodedTitle,
 						videoUrl: encodedUrl
 					});
-					// videoItems.push({
-					// 	title: item.title,
-					// 	videoUrl: videoUrl
-					// });
-					console.log(item.title, videoUrl);
+					console.log(item.title);
 				} 
-				break;
 			}
 			console.log(`📄 ${PageUrl} 페이지에서 ${videoItems.length}개의 동영상 링크 수집 완료`);
-
 
 		} catch (error) {
 			console.warn(`❌ 게시글 링크 수집 실패: ${error.message}, retryCount: ${retry}`);
@@ -164,6 +156,7 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 				retry = 0
 				continue
 			}
+			// Retry get link in the current page
 			i--;
 			retry++;
 		}
