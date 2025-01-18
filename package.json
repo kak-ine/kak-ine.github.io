@@ -1,5 +1,11 @@
 {
+  "name": "hellojs",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "hello": node data/api/hello.js
-  }
+    "hello": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
