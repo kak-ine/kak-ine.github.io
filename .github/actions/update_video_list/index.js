@@ -40,7 +40,7 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 		await page.goto(postUrl, { waitUntil: 'networkidle2' });
 
 		// 2️⃣ iframe 요소 로딩 대기
-		await page.waitForSelector(iframeSelector, { timeout: 30000 });
+		await page.waitForSelector(iframeSelector, { timeout: 60000 });
 
 		// 3️⃣ iframe 접근
 		const iframeHandle = await page.$(iframeSelector);
@@ -51,7 +51,7 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector)
 		}
 
 		// 4️⃣ iframe 내부의 video 요소 대기
-		await frame.waitForSelector(videoSelector, { timeout: 30000 });
+		await frame.waitForSelector(videoSelector, { timeout: 60000 });
 
 		// 5️⃣ video > source의 src 추출
 		const videoSrc = await frame.$eval(`${videoSelector} > source`, source => source.src);
