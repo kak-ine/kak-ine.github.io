@@ -20,7 +20,9 @@ jobs:
           cache-dependency-path: .github/actions/update_video_list/package-lock.json
 
       - name: Install npm dependencies
-        run: npm ci
+        run: |
+          pushd .github/actions/update_video_list
+          npm ci
 
       - name: Update daily data
         run: |
