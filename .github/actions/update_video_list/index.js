@@ -53,7 +53,7 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector,
 		await page.goto(postUrl, { waitUntil: 'networkidle2' });
 
 		// 2️⃣ iframe 요소 로딩 대기
-		await page.waitForSelector(iframeSelector, { timeout: 60000 });
+		// await page.waitForSelector(iframeSelector, { timeout: 30000 });
 
 		// 3️⃣ iframe 접근
 		const iframeHandle = await page.$(iframeSelector);
@@ -64,7 +64,7 @@ async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector,
 		}
 
 		// 4️⃣ iframe 내부의 video 요소 대기
-		await frame.waitForSelector(videoSelector, { timeout: 60000 });
+		await frame.waitForSelector(videoSelector, { timeout: 30000 });
 
 		// 5️⃣ video > source의 src 추출
 		const videoSrc = await frame.$eval(`${videoSelector} > source`, source => source.src);
@@ -202,4 +202,5 @@ await fetchPostLinksSeq(maxPageNumber, 5);
 console.log('수집된 videoItems:', videoItems);
 
 // ../../../data/videos.json
+videoItems.push(...fetchedItems);
 fs.writeFileSync('../../../data/videos.json', JSON.stringify(videoItems, null, 2), 'utf-8');
