@@ -12,6 +12,14 @@ const keyword = "아이네";
 const headers = {
 	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
+// Current Items
+const response = await fetch('https://kak-ine.github.io/data/videos.json');
+const fetchedItems = await response.json();
+// ✅ 배열 전체 디코딩
+const decodedData = fetchedItems.map(item => ({
+    title: decodeBase64(item.title),
+    videoUrl: decodeBase64(item.videoUrl)
+}));
 
 // 🔥 새로 추가: { title: ..., videoUrl: ... } 형태의 배열
 const videoItems = [];
@@ -141,8 +149,18 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 
 			// 🔥 각 postUrl에서 videoUrl 추출, videoItems에 저장
 			for (const item of postLinks) {
-				const videoUrl = await fetchVideoUrl(item.postUrl, retryCount);
 				await delay();
+				// 새 항목 확인 후 추가
+			      	const isDuplicate = decodedData.some(decodedData => decodedData.title === item.title);
+		
+			    	if (!isDuplicate) {
+					console.log(`✅ 새로운 항목 추가: ${item.title}`);
+			    	} else {
+					console.log(`⚠️ 중복 항목 건너뜀: ${item.title}`);
+					break
+			    	}
+				const videoUrl = await fetchVideoUrl(item.postUrl, retryCount);
+				
 				if (videoUrl) {
 					const encodedTitle = Buffer.from(item.title, 'utf-8').toString('base64');
 					const encodedUrl = Buffer.from(videoUrl, 'utf-8').toString('base64');  
@@ -167,6 +185,8 @@ const fetchPostLinksSeq = async (maxPageNumber, retryCount = 0) => {
 		}
 	}
 };
+
+
 
 // Test code
 // await fetchPostLinksSeq(1, 5);
