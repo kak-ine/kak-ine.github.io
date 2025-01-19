@@ -32,6 +32,11 @@ function replaceDomain(videoUrl) {
 	return videoUrl.replace('dcm6', 'dcm1');
 }
 
+// ✅ Base64 디코딩 함수
+function decodeBase64(data) {
+    return decodeURIComponent(escape(atob(data)));
+}
+
 async function extractVideoSrcFromIframe(postUrl, iframeSelector, videoSelector, retryCount = 0) {
 	const browser = await puppeteer.launch({
 		headless: true,  // headless 모드로 실행
