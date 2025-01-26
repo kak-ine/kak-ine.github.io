@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarklet Installer</title>
+</head>
+<body>
+    <h1>INE Player Bookmarklet</h1>
+    <p>이 버튼을 북마크로 드래그하거나 클릭 후 북마크에 추가하세요:</p>
+
+    <!-- Bookmarklet Button -->
+    <a href="javascript:(()=>{ const script = document.createElement('script'); script.src='https://kak-ine.github.io/data/api/ine-player.js'; script.type='text/javascript'; script.onload=()=>console.log('INE player start!'); document.body.appendChild(script); })();"
+       style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">
+        Add INE Player
+    </a>
+
+    <p>위 버튼을 브라우저의 즐겨찾기(북마크) 바에 드래그하세요. 또는 클릭 후 나오는 창에서 북마크로 저장하세요.</p>
+</body>
+</html>
