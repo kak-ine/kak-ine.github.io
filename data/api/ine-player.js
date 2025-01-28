@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         INE live player
-// @version      0.1.0
+// @version      0.1.2
 // @description  디시인사이드 INE 갤러리의 영상을 재생합니다.
 // @author       Kak-ine
 // @match        https://gall.dcinside.com/mini/board/lists*id=ineviolet*
@@ -262,16 +262,14 @@
     }
 
     function createPlaylistUI() {
-        // 이미 존재하면 제거(갱신 목적)
+        // 기존 UI 제거
         const existing = document.getElementById('playlistContainer');
         if (existing) existing.remove();
 
-        // 컨테이너 생성
         const container = document.createElement('div');
         container.id = 'playlistContainer';
         container.style.position = 'fixed';
         container.style.bottom = '10px';
-        // container.style.right = '230px';
         container.style.padding = '10px';
         container.style.width = '250px';
         container.style.border = '1px solid #ccc';
@@ -285,47 +283,54 @@
             container.style.right = '230px';
         }
 
-        // 목록(ul)
+        // 스크롤 영역 설정
+        container.style.maxHeight = '60px';
+        container.style.overflowY = 'auto';
+        container.style.scrollBehavior = 'smooth'; // 스무스 스크롤
+
         const list = document.createElement('ul');
         list.style.margin = '0';
         list.style.padding = '0 0 0 20px';
 
-        // 표시할 범위: [currentIndex-1, currentIndex, currentIndex+1, currentIndex+2, currentIndex+3]
-        const startIndex = currentIndex - 1;
-        const endIndex = currentIndex + 3;
+        let activeLi = null; // 현재 곡에 해당하는 <li>를 저장할 변수
 
-        for (let i = startIndex; i <= endIndex; i++) {
-            // 범위 체크
-            if (i < 0 || i >= shuffledItems.length) continue; // 없는 곡은 스킵
-
+        for (let i = 0; i < shuffledItems.length; i++) {
             const item = shuffledItems[i];
-            const li = document.createElement('li');
+            const pli = document.createElement('li');
+            const cleanedTitle = item.title.replace(/^아이네 - /, "");
+            pli.textContent = cleanedTitle;
 
-            // 구분: 이전/현재/다음
-            if (i < currentIndex) {
-                // 이전 곡 (최대 1개)
-                li.innerText = `${item.title}`;
-            } else if (i === currentIndex) {
-                // 현재 곡 (볼드 처리)
-                li.innerHTML = `<strong>${item.title}</strong>`;
-            } else {
-                // 다음 곡 (최대 3개)
-                li.innerText = `${item.title}`;
+            // 현재 곡 배경 강조
+            if (i === currentIndex) {
+                pli.style.backgroundColor = '#cceeff';
+                pli.style.fontWeight = 'bold';
+                pli.classList.add('activeSong'); // 식별용 클래스
+                activeLi = pli; // 아래에서 scrollIntoView()에 사용
             }
 
-            // (선택) 클릭 시 그 곡으로 바로 재생하도록 이벤트 부여
-            li.addEventListener('click', () => {
+            // 곡 클릭 시
+            pli.addEventListener('click', () => {
                 currentIndex = i;
                 playVideo(item.videoUrl);
-                createPlaylistUI(); // UI 갱신
+                createPlaylistUI();
             });
 
-            list.appendChild(li);
+            list.appendChild(pli);
         }
 
         container.appendChild(list);
         document.body.appendChild(container);
+
+        // 📌 UI 생성 후, 현재 곡이 있는 li 위치로 스크롤 이동
+        if (activeLi) {
+            activeLi.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
     }
+
+
 
     // 📌 Fancy 버튼 컨트롤 패널 + 버튼 디자인 개선
     function createFancyControlPanel() {
@@ -437,33 +442,12 @@
         document.body.appendChild(expandButton);
     }
 
-    // 1) videoItems를 로컬 스토리지에 저장
-    function saveVideoItemsToLocal(videoItems) {
-        const jsonString = JSON.stringify(videoItems);
-        localStorage.setItem('videoItems', jsonString);
-        console.log('✅ videoItems가 로컬 스토리지에 저장되었습니다.');
-    }
-
-    // 2) 로컬 스토리지에서 videoItems 불러오기
-    function loadVideoItemsFromLocal() {
-        const stored = localStorage.getItem('videoItems');
-        if (!stored) return [];
-
-        try {
-            return JSON.parse(stored);
-        } catch (error) {
-            console.error('❌ videoItems 파싱 실패:', error);
-            return [];
-        }
-    }
-
 
     // ✅ Base64 디코딩 함수
     function decodeBase64(data) {
         return decodeURIComponent(escape(atob(data)));
     }
 
-    // 우선 기존에 저장된 videoItems 불러오기 (있다면)
     const response = await fetch('https://kak-ine.github.io/data/videos.json');
     const fetchedItems = await response.json();
 
@@ -472,7 +456,18 @@
         title: decodeBase64(item.title),
         videoUrl: decodeBase64(item.videoUrl)
     }));
-  
+
+
+    // DONE: Github Action에서 DB에 daily update 하도록 자동화 //
+
+    // ///////////////// Depecated ////////////////////////
+    // // 미니 갤러리 크롤링하여 비디오 링크 수집
+    // const maxPageNumber = await fetchMaxPageNumber();
+    // await fetchPostLinksSeq(maxPageNumber, 5);
+    // console.log('수집된 videoItems:', videoItems);
+    // ///////////////// Depecated ////////////////////////
+
+    // DB로 부터 로드
     videoItems.push(...decodedData);
     shuffledItems = videoItems.slice()
     createFancyControlPanel();
