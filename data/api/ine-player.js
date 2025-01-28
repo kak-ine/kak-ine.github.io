@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         INE live player
-// @version      0.1.2
+// @version      0.2.1
 // @description  디시인사이드 INE 갤러리의 영상을 재생합니다.
 // @author       Kak-ine
 // @match        https://gall.dcinside.com/mini/board/lists*id=ineviolet*
@@ -278,7 +278,7 @@
         container.style.zIndex = 9999;
 
         if (isHidden) {
-            container.style.right = '20px';
+            container.style.right = '70px';
         } else {
             container.style.right = '230px';
         }
